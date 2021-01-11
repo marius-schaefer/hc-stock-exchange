@@ -10,3 +10,7 @@ Features are still being determined, if you have any suggestions please suggest 
     - see who owns what stocks
 
 Again if you have any suggestions please suggest them in #hc-stock-exchange!
+
+## Why is this project in Python?
+RIP, its the only language I know atm :(
+And because it is possible so I would like to apply my python skills in this project and improve them as well. 
