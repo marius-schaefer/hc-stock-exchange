@@ -11,6 +11,9 @@ Features are still being determined, if you have any suggestions please suggest 
 
 Again if you have any suggestions please suggest them in #hc-stock-exchange!
 
+## How stock prices will be calculated?
+They will be calculated based on the amount of messages you have sent (this data will be taken from @Overseer). The details have not been figured out yet, so if you have any suggestions you know where to send them.
+
 ## Why is this project in Python?
 RIP, its the only language I know atm :(
 And because it is possible so I would like to apply my python skills in this project and improve them as well. 
