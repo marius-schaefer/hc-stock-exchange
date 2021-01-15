@@ -7,11 +7,11 @@ x = requests.get(url)
 
 json_data = json.loads(x.content)
 
-def find_user_message_count(y, json_data):
-    z = 0
+def find_user_message_count(user_id, json_data):
+    ind = 0
     for item in json_data:
-        z += 1
-        if item[0] == y: 
+        ind += 1
+        if item[0] == user_id: 
             break
-    z -= 1
-    return json_data[z][1]
+    ind -= 1
+    return json_data[ind][1]
