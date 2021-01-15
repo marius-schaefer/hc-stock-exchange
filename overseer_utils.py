@@ -15,3 +15,10 @@ def find_user_message_count(user_id, json_data):
             break
     ind -= 1
     return json_data[ind][1]
+
+
+def update_message_count(dictionary):
+    for item in dictionary:
+        new_message_count = find_user_message_count(item, json_data)
+        dictionary[item] = new_message_count
+    return dictionary
