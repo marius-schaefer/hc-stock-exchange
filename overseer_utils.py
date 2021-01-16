@@ -1,17 +1,18 @@
 import requests
 import json
 
-#Gets data from the Overseer Github
-url = 'https://github.com/KhushrajRathod/TheOverseerBackend/releases/download/Latest/results.json'
-x = requests.get(url)
-
-#Formates the data into a list containing lists
-json_data = json.loads(x.content)
-
 
 #Function for getting the message count of a user
-def get_user_message_count(user_id, json_data):
+def get_user_message_count(user_id):
+    #Gets data from the Overseer Github
+    url = 'https://github.com/KhushrajRathod/TheOverseerBackend/releases/download/Latest/results.json'
+    x = requests.get(url)
+
+    #Formates the data into a list containing lists
+    json_data = json.loads(x.content)
     ind = 0
+
+    #Getting the message amount
     for item in json_data:
         ind += 1
         if item[0] == user_id: 
