@@ -10,7 +10,7 @@ json_data = json.loads(x.content)
 
 
 #Function for getting the message count of a user
-def find_user_message_count(user_id, json_data):
+def get_user_message_count(user_id, json_data):
     ind = 0
     for item in json_data:
         ind += 1
