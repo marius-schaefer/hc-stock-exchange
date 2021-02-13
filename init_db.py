@@ -53,3 +53,19 @@ def create_stock_table():
     
     conn.commit()
     conn.close()
+
+
+def create_trades_table():
+    #creates or connects to an existing db
+    conn = sqlite3.connect('hse.db')
+    #creates cursor
+    c = conn.cursor()
+
+    #creates trades table
+    c.execute("""CREATE TABLE trades (
+            stock_symbol text,
+            trade_time text,
+    )""")
+    
+    conn.commit()
+    conn.close()
