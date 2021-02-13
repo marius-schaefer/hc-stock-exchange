@@ -9,6 +9,30 @@ def check_for_table(table_name):
     #gets the count of tables with table_name:
     c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name= ? ''', (table_name,))
     if c.fetchone()[0]==1 :
+        conn.commit()
+        conn.close()
         return True
     else:
+        conn.commit()
+        conn.close()
         return False
+
+
+def create_all_stocks_table():
+    #creates or connects to an existing db
+    conn = sqlite3.connect('hse.db')
+    #creates cursor
+    c = conn.cursor()
+
+    #creates all-stocks table
+    c.execute("""CREATE TABLE all-stocks
+            stock_id text,
+            stock_name text,
+            stock_symbol text,
+            stock_price
+            stock_owner text,
+            stock_creator text,
+    """)
+    
+    conn.commit()
+    conn.close()
