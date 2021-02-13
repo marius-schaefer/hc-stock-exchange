@@ -21,6 +21,5 @@ def find_user_message_count(slack_id):
     index -= 1
     return json_data[index][1]
 
-print(find_user_message_count('U014DQS7AE7'))
 
 
