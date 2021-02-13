@@ -25,14 +25,31 @@ def create_all_stocks_table():
     c = conn.cursor()
 
     #creates all-stocks table
-    c.execute("""CREATE TABLE all-stocks
+    c.execute("""CREATE TABLE all-stocks (
             stock_id text,
             stock_name text,
             stock_symbol text,
-            stock_price
             stock_owner text,
             stock_creator text,
-    """)
+    )""")
+    
+    conn.commit()
+    conn.close()
+
+
+def create_stock_table():
+    #creates or connects to an existing db
+    conn = sqlite3.connect('hse.db')
+    #creates cursor
+    c = conn.cursor()
+
+    #creates stock table
+    c.execute("""CREATE TABLE stock (
+            stock_name text,
+            stock_symbol text,
+            stock_price interger,
+            stock_creator text,
+    )""")
     
     conn.commit()
     conn.close()
