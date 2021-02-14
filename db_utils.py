@@ -137,3 +137,26 @@ def get_top_stocks():
     conn.close()
 
     return top_stocks
+
+
+def check_if_can_be_sold(owner, stock_symbol, amount):
+    #creates or connects to an existing db
+    conn = sqlite3.connect('hse.db')
+    #creates cursor
+    c = conn.cursor()
+
+    #Selecting the data we want to get from the db
+    c.execute("SELECT * FROM all-stocks WHERE stock_symbol = ? AND stock_owner = ?", (stock_symbol, owner))
+
+    #Getting the data we selected:
+    stocks = c.fetchall()
+
+    conn.commit()
+    conn.close()
+
+    #Comparing the amount of stocks owned by the user to the amount the user wishes to sell:
+    amount_in_possesion = len(stocks)
+    if amount <= amount_in_possesion:
+        return True
+    else:
+        return False
