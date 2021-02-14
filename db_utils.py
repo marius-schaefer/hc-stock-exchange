@@ -90,3 +90,32 @@ def set_stock_as_unavailable(stock_symbol, owner, amount):
     conn.commit()
     #closing the db:
     conn.close()
+
+
+def get_portfolio(user):
+    #creates or connects to an existing db
+    conn = sqlite3.connect('hse.db')
+    #creates cursor
+    c = conn.cursor()
+
+    #Selecting the data we want:
+    c.execute("""SELECT * FROM all-stocks WHERE stock_owner = ?""", (user,))
+
+    #Actually getting the data and storing it in the variable stocks
+    stocks = c.fetchall()
+
+    conn.commit()
+    conn.close()
+
+    #Creating the dictionary that will be used to count the stocks in the portfolio
+    portfolio = {}
+
+    #Counting the total stocks:
+    for stock in stocks:
+        if stock[1] not in portfolio:
+            portfolio.update(stock[1] : 1)
+        else:
+            portfolio[stock[1]] += 1
+    
+    #Once the stocks in the portfolio have been counted, the function returns the dictionary:
+    return portfolio
