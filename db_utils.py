@@ -55,8 +55,26 @@ def set_stock_owner(stock_symbol, owner, new_owner, amount):
     #creates cursor
     c = conn.cursor()
 
-     #Selecting the data we want:
+    #Inputing what we want to do:
     c.execute("""UPDATE all-stocks SET stock_owner = ? 
                 WHERE stock_owner = ? AND stock_symbol = ? LIMIT ?""", (new_owner, owner, stock_symbol, amount,))
+    #Executing our instructions from above:
     conn.commit()
+    #closing the db:
+    conn.close()
+
+
+def set_stock_as_available(stock_symbol, owner, amount):
+    #creates or connects to an existing db
+    conn = sqlite3.connect('hse.db')
+    #creates cursor
+    c = conn.cursor()
+
+    #Inputing what we want to do
+    c.execute("""UPDATE all-stocks SET available = True
+                WHERE stock_owner = ? AND stock_symbol = ? LIMIT ?""", (owner, stock_symbol, amount))
+    
+    #Executing our instructions from above:
+    conn.commit()
+    #closing the db:
     conn.close()
