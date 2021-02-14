@@ -160,3 +160,24 @@ def check_if_can_be_sold(owner, stock_symbol, amount):
         return True
     else:
         return False
+
+
+def check_stock_creation_conditions(user_id):
+    #This Function will return True if a user can create a stock
+    #user_id = Slack user id
+
+    #creates or connects to an existing db
+    conn = sqlite3.connect('hse.db')
+    #creates cursor
+    c = conn.cursor()
+    
+    #Selecting the data we want to get from the db
+    c.execute("SELECT * FROM stock-creator WHERE stock_creator = ?", (user_id,))
+
+    #Getting the data we selected:
+    created_stock = c.fetchall()
+
+    if created_stock == None:
+        return True
+    else:
+        return False
