@@ -45,11 +45,7 @@ def get_stock_price(stock):
 
 
 def set_stock_owner(stock_symbol, owner, new_owner, amount):
-    #Amount refers to the amount of stocks that should be transfered to the new owner
-    #LAYOUT:
-    # GETS STOCKS FROM DB
-    # FOR EACH STOCK SET OWNER AS NEW OWNER...
-    
+    #Amount refers to the amount of stocks that should be transfered to the new owner 
     #creates or connects to an existing db
     conn = sqlite3.connect('hse.db')
     #creates cursor
