@@ -78,3 +78,19 @@ def set_stock_as_available(stock_symbol, owner, amount):
     conn.commit()
     #closing the db:
     conn.close()
+
+
+def set_stock_as_unavailable(stock_symbol, owner, amount):
+    #creates or connects to an existing db
+    conn = sqlite3.connect('hse.db')
+    #creates cursor
+    c = conn.cursor()
+
+    #Inputing what we want to do
+    c.execute("""UPDATE all-stocks SET available = False
+                WHERE stock_owner = ? AND stock_symbol = ? LIMIT ?""", (owner, stock_symbol, amount))
+    
+    #Executing our instructions from above:
+    conn.commit()
+    #closing the db:
+    conn.close()
