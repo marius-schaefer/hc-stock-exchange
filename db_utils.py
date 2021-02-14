@@ -42,3 +42,21 @@ def get_stock_price(stock):
     except:
         #tell main.py to send an error messgae
         return None
+
+
+def set_stock_owner(stock_symbol, owner, new_owner, amount):
+    #Amount refers to the amount of stocks that should be transfered to the new owner
+    #LAYOUT:
+    # GETS STOCKS FROM DB
+    # FOR EACH STOCK SET OWNER AS NEW OWNER...
+    
+    #creates or connects to an existing db
+    conn = sqlite3.connect('hse.db')
+    #creates cursor
+    c = conn.cursor()
+
+     #Selecting the data we want:
+    c.execute("""UPDATE all-stocks SET stock_owner = ? 
+                WHERE stock_owner = ? AND stock_symbol = ? LIMIT ?""", (new_owner, owner, stock_symbol, amount,))
+    conn.commit()
+    conn.close()
