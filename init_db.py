@@ -29,6 +29,7 @@ def create_all_stocks_table():
             stock_id text,
             stock_name text,
             stock_symbol text,
+            available text,
             stock_owner text,
             stock_creator text,
     )""")
@@ -65,6 +66,22 @@ def create_trades_table():
     c.execute("""CREATE TABLE trades (
             stock_symbol text,
             trade_time text,
+    )""")
+    
+    conn.commit()
+    conn.close()
+
+
+def create_stock_creator_table():
+    #creates or connects to an existing db
+    conn = sqlite3.connect('hse.db')
+    #creates cursor
+    c = conn.cursor()
+
+    #creates stock-creator table
+    c.execute("""CREATE TABLE stock-creator (
+            stock_creator text,
+            stock_symbol text,
     )""")
     
     conn.commit()
