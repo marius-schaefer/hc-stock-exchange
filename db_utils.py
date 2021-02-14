@@ -193,7 +193,21 @@ def add_stock_creator_to_db(user_id):
     c = conn.cursor()
 
     #What we want to add and where we want to add it:
-    c.execute("INSERT INTO stock-creator VALUES ('?',)", (user_id,))
+    c.execute("INSERT INTO stock-creator VALUES (?,)", (user_id,))
 
     conn.commit()
     conn.close()
+
+
+def add_stock_to_stock_table(stock_name, stock_symbol, stock_creator):
+    #creates or connects to an existing db
+    conn = sqlite3.connect('hse.db')
+    #creates cursor
+    c = conn.cursor()
+
+    #What we want to add into the table:
+    c.execute("INSERT INTO stock VALUES (?, ?, 0, ?)", (stock_name, stock_symbol, stock_creator))
+
+    conn.commit()
+    conn.close()
+
