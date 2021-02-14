@@ -113,9 +113,27 @@ def get_portfolio(user):
     #Counting the total stocks:
     for stock in stocks:
         if stock[1] not in portfolio:
-            portfolio.update(stock[1] : 1)
+            portfolio.update({stock[1]:1})
         else:
             portfolio[stock[1]] += 1
     
     #Once the stocks in the portfolio have been counted, the function returns the dictionary:
     return portfolio
+
+
+def get_top_stocks():
+    #creates or connects to an existing db
+    conn = sqlite3.connect('hse.db')
+    #creates cursor
+    c = conn.cursor()
+
+    #Selecting the data we want to get from the db
+    c.execute("SELECT * FROM stock ORDER BY stock_price DESC LIMIT 10")
+
+    #Getting the data we selected:
+    top_stocks = c.fetchall()
+
+    conn.commit()
+    conn.close()
+
+    return top_stocks
