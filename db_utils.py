@@ -177,7 +177,23 @@ def check_stock_creation_conditions(user_id):
     #Getting the data we selected:
     created_stock = c.fetchall()
 
+    conn.commit()
+    conn.close()
+
     if created_stock == None:
         return True
     else:
         return False
+
+
+def add_stock_creator_to_db(user_id):
+    #creates or connects to an existing db
+    conn = sqlite3.connect('hse.db')
+    #creates cursor
+    c = conn.cursor()
+
+    #What we want to add and where we want to add it:
+    c.execute("INSERT INTO stock-creator VALUES ('?',)", (user_id,))
+
+    conn.commit()
+    conn.close()
