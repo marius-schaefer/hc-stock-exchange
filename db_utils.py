@@ -211,3 +211,24 @@ def add_stock_to_stock_table(stock_name, stock_symbol, stock_creator):
     conn.commit()
     conn.close()
 
+
+def add_stock_to_all_stocks_table(stock_name, stock_symbol, stock_creator):
+    #creates or connects to an existing db
+    conn = sqlite3.connect('hse.db')
+    #creates cursor
+    c = conn.cursor()
+    
+    #The for loop creates 100 stocks with unique stock_id's and fills in the rest of the data aswell:
+    for number in range(1, 101):
+        stock_id = stock_symbol + str(number)
+        
+        #creates or connects to an existing db
+        conn = sqlite3.connect('hse.db')
+        #creates cursor
+        c = conn.cursor()  
+
+        #Adds the data of the stock we want to add:
+        c.execute("INSERT INTO all-stocks VALUES (?, ?, ?, 'False', ?, ?)", (stock_id, stock_name, stock_symbol, stock_creator, stock_creator)) 
+
+        conn.commit()
+        conn.close()
