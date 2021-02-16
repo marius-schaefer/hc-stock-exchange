@@ -1,4 +1,5 @@
 import sqlite3
+import datetime
 
 
 def get_stock_price(stock):
@@ -229,6 +230,22 @@ def add_stock_to_all_stocks_table(stock_name, stock_symbol, stock_creator):
 
         #Adds the data of the stock we want to add:
         c.execute("INSERT INTO all-stocks VALUES (?, ?, ?, 'False', ?, ?)", (stock_id, stock_name, stock_symbol, stock_creator, stock_creator)) 
+
+        conn.commit()
+        conn.close()
+
+
+def add_trade(stock_symbol):
+    #creates or connects to an existing db
+    conn = sqlite3.connect('hse.db')
+    #creates cursor
+    c = conn.cursor()
+
+    #Getting the current time:
+    time = datetime.datetime.utcnow()
+
+    #Adds the data of the stock we want to add:
+        c.execute("INSERT INTO trades VALUES (?, ?)", (stock_symbol, time)) 
 
         conn.commit()
         conn.close()
