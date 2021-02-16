@@ -307,7 +307,6 @@ def get_trade_count(stock_symbol):
     #Actually getting the data
     trades_amount = c.fetchall()
     
-    
     conn.commit()
     conn.close()
     
