@@ -245,7 +245,50 @@ def add_trade(stock_symbol):
     time = datetime.datetime.utcnow()
 
     #Adds the data of the stock we want to add:
-        c.execute("INSERT INTO trades VALUES (?, ?)", (stock_symbol, time)) 
+    c.execute("INSERT INTO trades VALUES (?, ?)", (stock_symbol, time)) 
 
-        conn.commit()
-        conn.close()
+    conn.commit()
+    conn.close()
+
+
+def update_trades():
+    #creates or connects to an existing db:
+    conn = sqlite3.connect('hse.db')
+    #creates cursor:
+    c = conn.cursor()
+
+    #Selecting all the data:
+    c.execute("SELECT rowid, * FROM trades")
+
+    #Getting the data and storing it in a variable:
+    trades = c.fetchall()
+
+    conn.commit()
+    conn.close()
+    
+    #For loop that checks how long ago a trade was made, if over 24hrs it will remove that trade:
+    for trade in trades:
+        row_id = trade[0]
+        trade_time = trade[2]
+        
+        #storing the current time in a variable:
+        time = datetime.datetime.utcnow()
+
+        #Getting the time delta:
+        tdelta = time - trade_time
+
+        #Checking if the trade time was over 24hrs ago, and removing the trade if so:
+        if tdelta.days >= 1:
+            #creates or connects to an existing db:
+            conn = sqlite3.connect('hse.db')
+            #creates cursor:
+            c = conn.cursor()
+
+            #Selecting what we want to delete:    
+            c.execute("DELETE from trades WHERE rowid = ?", (row_id,))
+
+            #Deleting it
+            conn.commit()
+            conn.close()
+        else:
+            pass
