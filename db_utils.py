@@ -292,3 +292,28 @@ def update_trades():
             conn.close()
         else:
             pass
+
+
+def get_trade_count(stock_symbol):
+    update_trades()
+    #creates or connects to an existing db:
+    conn = sqlite3.connect('hse.db')
+    #creates cursor:
+    c = conn.cursor()
+
+    #Selecting all the data:
+    c.execute("SELECT * FROM trades WHERE stock_symbol = ?", (stock_symbol,))
+
+    #Actually getting the data
+    trades_amount = c.fetchall()
+    
+    
+    conn.commit()
+    conn.close()
+    
+    if trades_amount == None:
+        trades_amount = 0
+        return trades_amount
+    else:
+        trades_amount = len(trades_amount)
+        return trades_amount
