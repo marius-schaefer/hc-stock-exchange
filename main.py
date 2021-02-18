@@ -1,4 +1,5 @@
 from init_db import *
+import slack
 
 
 #checks if all-stocks table exists in the db
@@ -18,3 +19,9 @@ trades_table = check_for_table('trades')
 #creates trades table if the table does not exist
 if not trades_table:
     create_trades_table()
+
+#checks if stock-creator table exists in the db
+trades_table = check_for_table('stock-creator')
+#creates stock-creator table if the table does not exist
+if not trades_table:
+    create_stock_creator_table
