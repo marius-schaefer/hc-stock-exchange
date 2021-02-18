@@ -1,5 +1,6 @@
 import sqlite3
 import datetime
+from hn_utils import *
 
 
 def get_stock_price(stock):
@@ -17,6 +18,9 @@ def get_stock_price(stock):
 
         #Actually getting the price and storing it in the variale price
         price = c.fetchone()
+
+        #Updating the Stock Price:
+        
 
         if price == None:
             pass
@@ -54,7 +58,7 @@ def set_stock_owner(stock_symbol, owner, new_owner, amount):
 
     #Inputing what we want to do:
     c.execute("""UPDATE all-stocks SET stock_owner = ? 
-                WHERE stock_owner = ? AND stock_symbol = ? LIMIT ?""", (new_owner, owner, stock_symbol, amount,))
+                WHERE stock_owner = ? AND stock_symbol = ? AND available = True LIMIT ?""", (new_owner, owner, stock_symbol, amount,))
     #Executing our instructions from above:
     conn.commit()
     #closing the db:
@@ -316,3 +320,47 @@ def get_trade_count(stock_symbol):
     else:
         trades_amount = len(trades_amount)
         return trades_amount
+    
+
+def set_stock_owner_plus_payout(stock_symbol, owner, new_owner, amount):
+    #Amount refers to the amount of stocks that should be transfered to the new owner 
+    #creates or connects to an existing db
+    conn = sqlite3.connect('hse.db')
+    #creates cursor
+    c = conn.cursor()
+    
+    #Inputing the data we want to get:
+    c.execute("SELECT rowid, * FROM all-stocks WHERE stock_symbol = ? AND stock_owner = ? AND available = True LIMIT ?", (stock_symbol, owner, amount))
+
+    #Getting the data from the db and storing it in a variable
+    stocks_to_change_owner_for = c.fetchall()
+
+    conn.commit()
+    #closing the db:
+    conn.close()
+    
+    #Getting the stock price:
+    conn = sqlite3.connect('hse.db')
+    c = conn.cursor()
+
+    c.execute("SELECT * FROM stock WHERE stock_symbol = ?", (stock_symbol,))
+
+    stock_data = c.fetchall()
+    stock_price = stock_data[2]
+
+    #for loop that changes them all individually
+    for stock in stocks_to_change_owner_for:
+        primary_key = stock[0]
+        current_owner = stock[4]
+        payout(current_owner, stock_price)
+
+        conn = sqlite3.connect('hse.db')
+        c = conn.cursor()
+
+        c.execute("""UPDATE all-stocks SET stock_owner = ?
+                    WHERE rowid = ?""", (new_owner, primary_key))
+
+        #Executing our instructions from above:
+        conn.commit()
+        #closing the db:
+        conn.close()
