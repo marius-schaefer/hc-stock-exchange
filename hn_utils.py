@@ -96,5 +96,5 @@ def create_invoice(amount, slack_id):
     }
 
   #Sending the post request to the HN Api
-    r = requests.post('https://hn.rishi.cx', json={"query":data, 'variables': variables}, headers=headers)
+  r = requests.post('https://hn.rishi.cx', json={"query":data, 'variables': variables}, headers=headers)
   
