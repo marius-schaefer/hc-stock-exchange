@@ -366,22 +366,3 @@ def set_stock_owner_plus_payout(stock_symbol, owner, new_owner, amount):
         conn.close()
 
 
-def get_all_stock_names():
-    #creates or connects to an existing db
-    conn = sqlite3.connect('hse.db')
-    #creates cursor
-    c = conn.cursor()
-
-    c.execute("SELECT * FROM stock")
-
-    stocks = c.fetchall()
-
-    conn.commit()
-    #closing the db:
-    conn.close()
-
-    all_stock_names = []
-    for stock in stocks:
-        all_stock_names.append(stock[0])
-    
-    return all_stock_names
