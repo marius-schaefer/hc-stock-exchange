@@ -74,3 +74,27 @@ def payout(slack_id, amount):
     r = requests.post('https://hn.rishi.cx', json={"query":data, 'variables': variables}, headers=headers)
 
 
+def create_invoice(amount, slack_id):
+  #Mutation:
+  data = """mutation invoice_test($amount:Float!, $from: String!, $to: String!){
+  transact(data:{balance:$amount, from: $from, to:$to}){
+    id
+    validated
+  }
+}"""
+  
+  #Variables:
+  variables = {
+  "amount": amount,
+  "from": slack_id,
+  "to": "U01N29M0C9L"
+}
+
+  #Authentication
+    headers = {
+    "secret" : 'PUT_HN_TOKEN_HERE'
+    }
+
+  #Sending the post request to the HN Api
+    r = requests.post('https://hn.rishi.cx', json={"query":data, 'variables': variables}, headers=headers)
+  
