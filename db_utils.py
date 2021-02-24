@@ -1,6 +1,7 @@
 import sqlite3
 import datetime
 from hn_utils import *
+from overseer_utils import *
 
 
 def get_stock_price(stock):
@@ -18,8 +19,6 @@ def get_stock_price(stock):
 
         #Actually getting the price and storing it in the variale price
         price = c.fetchone()
-
-        #Updating the Stock Price:
         
 
         if price == None:
@@ -366,3 +365,51 @@ def set_stock_owner_plus_payout(stock_symbol, owner, new_owner, amount):
         conn.close()
 
 
+def update_stock_price(stock_creator):
+    #Getting the data that is needed
+    message_count = find_user_message_count(stock_creator)
+    trade_count = get_trade_count(stock_creator)
+
+    #Calculating the stock price and storing it in a variable:
+    stock_price = (((message_count/300)*50)+(trade_count*50))//100
+
+    #creates or connects to an existing db
+    conn = sqlite3.connect('hse.db')
+    #creates cursor
+    c = conn.cursor()
+
+    #Adds the data of the stock we want to add:
+    c.execute("UPDATE stock SET stock_price = ? WHERE stock_creator = ?", (stock_price, stock_creator)) 
+
+    conn.commit()
+    conn.close()
+
+
+def get_all_available_stock_data():
+    #Amount refers to the amount of stocks that should be transfered to the new owner 
+    #creates or connects to an existing db
+    conn = sqlite3.connect('hse.db')
+    #creates cursor
+    c = conn.cursor()
+
+    c.execute("SELECT * FROM stock")
+
+    all_stocks = c.fetchall()
+
+    all_availble_stocks = []
+    
+    for stock in all_stocks:
+        c.execute("SELECT * FROM all-stocks WHERE stock_symbol = ? AND available = TRUE", (stock[1],))
+        available_stocks = c.fetchall()
+        if available_stocks != None:
+            amount_of_available_stocks = len(available_stocks)
+            all_availble_stocks.append({
+            "stock_name" : stock[0],
+            "stock_symbol" : stock[1],
+            "stock_price" : update_stock_price(stock[3]),
+            "amount_available" : amount_of_available_stocks
+        })
+        else:
+            pass
+    
+    return all_availble_stocks
