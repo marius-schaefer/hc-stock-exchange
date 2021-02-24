@@ -2,7 +2,7 @@ import requests
 import os
 import json
 
-def check_for_hn_transaction(slack_id, amount, transaction_id):
+def check_for_hn_transaction(slack_id, amount):
     #Query:
     query = """query check_for_hn_transaction{
   user(id:"U01N29M0C9L"){
@@ -23,14 +23,14 @@ def check_for_hn_transaction(slack_id, amount, transaction_id):
     json_data = json.loads(r.content)
 
     #Limiting the amount of data the function will check through so it won't take forever...:
-    incomingTransactions_list = json_data['data']['user']['incomingTransactions'][0:3]
+    incomingTransactions_list = json_data['data']['user']['incomingTransactions'][0:5]
 
     #The for loop will check if there are coresponding values in the data, if so it will return True, else False
     #In order to return False if all the data does not contain corresponding values we have the loop count
     #Once the loop count reaches the length of the Data, it will return False
     loop_count = 0
     #Length of the list stored in a variable:
-    length = 3
+    length = 5
     #Actual For loop
     for transaction_data in incomingTransactions_list:
         loop_count += 1
@@ -44,12 +44,7 @@ def check_for_hn_transaction(slack_id, amount, transaction_id):
         else:
             correct_slack_id = False
         
-        if transaction_data['for'] == transaction_id:
-            correct_transaction_id = True
-        else:
-            correct_transaction_id = False
-        
-        if correct_amount_transacted and correct_slack_id and correct_transaction_id:
+        if correct_amount_transacted and correct_slack_id:
             return True
         elif loop_count == length:
             return False
