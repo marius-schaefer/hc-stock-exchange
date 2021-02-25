@@ -13,6 +13,10 @@ def buy_modal_1(ack, body, client):
 		"text": "Hack Club Stock Exchange",
 		"emoji": True
 	},
+	"submit": {
+		"type": "plain_text",
+		"text": "Proceed"
+	},
 	"close": {
 		"type": "plain_text",
 		"text": "Cancel",
@@ -44,33 +48,8 @@ def buy_modal_1(ack, body, client):
 					"emoji": True
 				},
 				"options": [
-					{
-						"text": {
-							"type": "plain_text",
-							"text": "Ch",
-							"emoji": True
-						},
-						"value": "value-0"
-					}
 				],
 				"action_id": "stock-to-buy"
-			}
-		},
-		{
-			"type": "section",
-			"text": {
-				"type": "mrkdwn",
-				"text": "*Once you have selected a stock click Proceed *"
-			},
-			"accessory": {
-				"type": "button",
-				"text": {
-					"type": "plain_text",
-					"text": "Proceed",
-					"emoji": True
-				},
-				"value": "click_me_123",
-				"action_id": "buy-proceed-1"
 			}
 		}
 	]
