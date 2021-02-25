@@ -386,7 +386,6 @@ def update_stock_price(stock_creator):
 
 
 def get_all_available_stock_data():
-    #Amount refers to the amount of stocks that should be transfered to the new owner 
     #creates or connects to an existing db
     conn = sqlite3.connect('hse.db')
     #creates cursor
@@ -413,3 +412,18 @@ def get_all_available_stock_data():
             pass
     
     return all_availble_stocks
+
+
+def get_amount_of_available_stocks(stock_symbol):
+    #creates or connects to an existing db
+    conn = sqlite3.connect('hse.db')
+    #creates cursor
+    c = conn.cursor()
+
+    c.execute("SELECT * FROM all-stocks WHERE stock_symbol = ? AND available = TRUE", (stock_symbol,))
+
+    available = c.fetchall()
+    
+    amount_available = len(available)
+
+    return amount_available
