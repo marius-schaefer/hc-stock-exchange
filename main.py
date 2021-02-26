@@ -63,6 +63,13 @@ def update_to_buy_modal_2(ack, body, client, view):
     buy_modal_2(ack, body, client, stock_symbol)
 
 
+@app.view('buy_modal_2')
+def update_to_buy_modal_3(ack, body, client, view):
+    amount_to_buy = view['state']['values']['static_select']['amount-to-buy']
+    ack()
+
+    buy_modal_3(ack, body, client)
+
 
 # Start your app
 if __name__ == "__main__":
