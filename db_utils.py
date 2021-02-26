@@ -321,7 +321,7 @@ def get_trade_count(stock_symbol):
         return trades_amount
     
 
-def set_stock_owner_plus_payout(stock_symbol, owner, new_owner, amount):
+def set_stock_owner_plus_payout(stock_symbol, new_owner, amount):
     #Amount refers to the amount of stocks that should be transfered to the new owner 
     #creates or connects to an existing db
     conn = sqlite3.connect('hse.db')
@@ -329,7 +329,7 @@ def set_stock_owner_plus_payout(stock_symbol, owner, new_owner, amount):
     c = conn.cursor()
     
     #Inputing the data we want to get:
-    c.execute("SELECT rowid, * FROM all-stocks WHERE stock_symbol = ? AND stock_owner = ? AND available = True LIMIT ?", (stock_symbol, owner, amount))
+    c.execute("SELECT rowid, * FROM all-stocks WHERE stock_symbol = ? AND available = True LIMIT ?", (stock_symbol, amount))
 
     #Getting the data from the db and storing it in a variable
     stocks_to_change_owner_for = c.fetchall()
