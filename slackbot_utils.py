@@ -123,7 +123,7 @@ def buy_modal_2(ack, body, client, stock_symbol):
 				},
 				"options": [
 				],
-				"action_id": "stock-to-buy"
+				"action_id": "amount-to-buy"
 			}
 		}
 	]
@@ -136,7 +136,7 @@ def buy_modal_2(ack, body, client, stock_symbol):
         option = {
 						"text": {
 							"type": "plain_text",
-							"text": f'{stock_amount}',
+							"text": f'{stock_symbol}-{stock_amount}',
 							"emoji": True
 						},
 						"value": f"value-{value}"
@@ -148,4 +148,54 @@ def buy_modal_2(ack, body, client, stock_symbol):
     client.views_open(
         trigger_id=body["trigger_id"],
         view=view_template
+    )
+
+
+def buy_modal_3(ack, body, client, stock_symbol_plus_amount):
+    values = stock_symbol_plus_amount.split('-')
+    stock_symbol = values[0]
+    amount = values[1]
+
+    client.views_open(
+        trigger_id=body["trigger_id"],
+        view={
+	"type": "modal",
+	"callback_id": "buy_modal_3",
+	"title": {
+		"type": "plain_text",
+		"text": f"Buy {amount} {stock_symbol}",
+		"emoji": True
+	},
+	"submit": {
+		"type": "plain_text",
+		"text": "Proceed"
+	},
+	"close": {
+		"type": "plain_text",
+		"text": "Cancel",
+		"emoji": True
+	},
+	"blocks": [
+		{
+			"type": "header",
+			"text": {
+				"type": "plain_text",
+				"text": "What to do next:",
+				"emoji": True
+			}
+		},
+		{
+			"type": "divider"
+		},
+		{
+			"type": "context",
+			"elements": [
+				{
+					"type": "mrkdwn",
+					"text": "*To pay for the stocks you would like to buy follow the following instructions:* Make sure you have an hn account, if you do not click cancel and make one. Once you have made one try again. Now, *once you press submit you will receive an invoice for the amount of HN that you have to pay* for in order to buy the stocks. *Check your HN Dashboard, and /pay* in order to pay the appropriate amount of HN. Once you have done, that the stocks will be yours! If you encounter any errors contact @Marius S. "
+				}
+			]
+		}
+	]
+}
     )
