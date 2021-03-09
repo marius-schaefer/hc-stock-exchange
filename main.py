@@ -40,7 +40,6 @@ app = App(
 )
 
 
-
 # Listens to incoming messages that contain "hello"
 @app.message("!hello")
 def message_hello(message, say):
@@ -104,6 +103,11 @@ def handle_submitted_buy_modal_data(ack, body, client, view):
     else:
         pass
 
+
+@app.command('/sell-stocks')
+def open_sell_modal(ack, body, client):
+    ack()
+    sell_modal_1(ack, body, client)
 
 
 # Start your app
