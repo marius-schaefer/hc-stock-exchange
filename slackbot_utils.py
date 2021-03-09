@@ -199,3 +199,38 @@ def buy_modal_3(ack, body, client, stock_symbol_plus_amount):
 	]
 }
     )
+
+
+def sell_modal_1(ack, body, client):
+	client.views_open(
+		trigger_id=body["trigger_id"],
+		view={
+	"type": "modal",
+	"callback_id": "sell_modal_1",
+	"title": {
+		"type": "plain_text",
+		"text": "Hack Club Stock Exchange",
+		"emoji": True
+	},
+	"submit": {
+		"type": "plain_text",
+		"text": "Proceed",
+		"emoji": True
+	},
+	"close": {
+		"type": "plain_text",
+		"text": "Cancel",
+		"emoji": True
+	},
+	"blocks": [
+		{
+			"type": "header",
+			"text": {
+				"type": "plain_text",
+				"text": "If you would like to proceed with selling stocks press proceed below",
+				"emoji": True
+			}
+		}
+	]
+}
+	)
