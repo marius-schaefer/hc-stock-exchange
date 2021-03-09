@@ -110,6 +110,16 @@ def open_sell_modal(ack, body, client):
     sell_modal_1(ack, body, client)
 
 
+#Once Sell_modal_1 is submitted, gets the user ID and triggers the second sell modal:
+@app.view('sell_modal_1')
+def update_to_sell_modal_2(ack, body, client, view):
+    ack()
+    user=body["user"]["id"]
+
+    #Opens the second sell_modal:
+    sell_modal_2(ack, body, client)
+
+
 # Start your app
 if __name__ == "__main__":
     app.start(port=int(os.environ.get("PORT", 3000)))
