@@ -129,6 +129,19 @@ def update_to_sell_modal_3(ack, body, client, view):
     sell_modal_3(ack, body, client, user, stock_name)
     
 
+@app.view('sell_modal_3')
+def update_to_sell_modal_4(ack, body, client, view):
+    ack()
+    user=body["user"]["id"]
+    amount_to_sell = view['state']['values']['static_select']['amount-to-sell']
+
+    split_amount_to_sell = amount_to_sell.split('-')
+    stock_symbol = split_amount_to_sell[0]
+    amount = split_amount_to_sell[1]
+
+    sell_modal_4(ack, body, client, user, stock_symbol, amount)
+
+
 # Start your app
 if __name__ == "__main__":
     app.start(port=int(os.environ.get("PORT", 3000)))
