@@ -427,3 +427,16 @@ def get_amount_of_available_stocks(stock_symbol):
     amount_available = len(available)
 
     return amount_available
+
+
+def get_stock_symbol(stock_name):
+    #creates or connects to an existing db
+    conn = sqlite3.connect('hse.db')
+    #creates cursor
+    c = conn.cursor()
+
+    #Selecting the data we want:
+    c.execute("SELECT * FROM stock WHERE stock_name = ? ", (stock_name,))
+
+    data = c.fetchone()
+    return data[1]
