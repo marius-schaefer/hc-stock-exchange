@@ -387,3 +387,89 @@ def sell_modal_3(ack, body, client, user, stock_name):
 		trigger_id=body["trigger_id"],
 		view=view_template
 	)
+
+
+def sell_modal_4(ack, body, client, user, stock_symbol, amount):
+	stock_name = get_stock_name(stock_symbol)
+	stock_name_plus_symbol = f"{stock_name}-{stock_symbol}"
+	amount_to_sell = amount
+	stock_price = get_stock_price(stock_symbol)
+	total_value = stock_price * amount
+
+
+	client.views_open(
+		trigger_id=body["trigger_id"],
+		view={
+	"type": "modal",
+	"callback_id": "sell_modal_4",
+	"title": {
+		"type": "plain_text",
+		"text": "Hack Club Stock Exchange",
+		"emoji": True
+	},
+	"submit": {
+		"type": "plain_text",
+		"text": "Confirm",
+		"emoji": True
+	},
+	"close": {
+		"type": "plain_text",
+		"text": "Cancel",
+		"emoji": True
+	},
+	"blocks": [
+		{
+			"type": "header",
+			"text": {
+				"type": "plain_text",
+				"text": "Read over the sell order, and press confirm if you wish to sell:",
+				"emoji": True
+			}
+		},
+		{
+			"type": "section",
+			"text": {
+				"type": "plain_text",
+				"text": "Please note that you will only receive the HN once someone buys your stocks which will be on the market once you press confirm.",
+				"emoji": True
+			}
+		},
+		{
+			"type": "header",
+			"text": {
+				"type": "plain_text",
+				"text": "Sell order info:",
+				"emoji": True
+			}
+		},
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": f"*Stock to Sell:* {stock_name_plus_symbol}"
+			}
+		},
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": f"*Amount to Sell:* {amount_to_sell}"
+			}
+		},
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": f"*Price per Stock:* {stock_price}"
+			}
+		},
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": f"*Total Value of Sell Order:* {total_value}"
+			}
+		}
+	]
+}
+	)
