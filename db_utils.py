@@ -440,3 +440,16 @@ def get_stock_symbol(stock_name):
 
     data = c.fetchone()
     return data[1]
+
+
+def get_stock_name(stock_symbol):
+    #creates or connects to an existing db
+    conn = sqlite3.connect('hse.db')
+    #creates cursor
+    c = conn.cursor()
+
+    #Selecting the data we want:
+    c.execute("SELECT * FROM stock WHERE stock_symbol = ? ", (stock_symbol,))
+
+    data = c.fetchone()
+    return data[0]
