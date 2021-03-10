@@ -201,6 +201,7 @@ def buy_modal_3(ack, body, client, stock_symbol_plus_amount):
     )
 
 
+#Modal for Getting the User_ID
 def sell_modal_1(ack, body, client):
 	client.views_open(
 		trigger_id=body["trigger_id"],
@@ -233,4 +234,80 @@ def sell_modal_1(ack, body, client):
 		}
 	]
 }
+	)
+
+
+#Sell_modal_2 Allows the user to select what stock to sell and how much:
+def sell_modal_2(ack, body, client, user):
+	portfolio = get_portfolio(user)
+	
+	view_template = {
+	"type": "modal",
+	"callback_id": "sell_modal_2",
+	"title": {
+		"type": "plain_text",
+		"text": "Hack Club Stock Exchange",
+		"emoji": True
+	},
+	"submit": {
+		"type": "plain_text",
+		"text": "Proceed",
+		"emoji": True
+	},
+	"close": {
+		"type": "plain_text",
+		"text": "Cancel",
+		"emoji": True
+	},
+	"blocks": [
+		{
+			"type": "header",
+			"text": {
+				"type": "plain_text",
+				"text": "Select what stock you would like to sell:",
+				"emoji": True
+			}
+		},
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "Choose a stock to sell:"
+			},
+			"accessory": {
+				"type": "static_select",
+				"placeholder": {
+					"type": "plain_text",
+					"text": "Select an item",
+					"emoji": True
+				},
+				"options": [
+
+				],
+				"action_id": "stock-to-sell"
+			}
+		}
+	]
+}
+	portfolio_stocks = []
+	for stock in portfolio:
+		portfolio_stocks.append(stock)
+
+	#For loop that adds a block for every stock that a user owns:
+	value = 0
+    for stock in portfolio_stocks:
+        option = {
+						"text": {
+							"type": "plain_text",
+							"text": f'{stock}',
+							"emoji": True
+						},
+						"value": f"value-{value}"
+					}
+        view_template['blocks'][1]['accessory']['options'].append(option)
+        value += 1
+
+	client.views_open(
+		trigger_id=body["trigger_id"],
+		view=view_template
 	)
