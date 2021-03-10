@@ -126,8 +126,7 @@ def update_to_sell_modal_3(ack, body, client, view):
     ack()
     user=body["user"]["id"]
     stock_name = view['state']['values']['static_select']['stock-to-sell']
-    stock_symbol = get_stock_symbol(stock_name)
-    sell_modal_3(ack, body, client, user, stock_symbol)
+    sell_modal_3(ack, body, client, user, stock_name)
     
 
 # Start your app
