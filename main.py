@@ -168,6 +168,15 @@ def take_off_market(ack, command, respond):
         respond("An error has occured, either you do not own the stocks that you wish to take off of the market, or a bug has occured. If it is a bug please contact Marius S., informing him of the error!")
 
 
+#
+#CREATE STOCK COMMAND + MODAL
+#
+@app.command('/create-stock')
+def create_stock(ack, command, body, client):
+    ack()
+    stock_creation_modal(ack, body, client)
+
+
 # Start your app
 if __name__ == "__main__":
     app.start(port=int(os.environ.get("PORT", 3000)))
