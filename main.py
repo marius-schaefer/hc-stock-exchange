@@ -47,6 +47,9 @@ def message_hello(message, say):
     say(f"Hey there <@{message['user']}>!")
 
 
+#
+#BUY COMMAND + MODAL 
+#
 @app.command('/buy-stocks')
 def open_buy_modal_1(ack, body, client):
     ack()
@@ -104,6 +107,9 @@ def handle_submitted_buy_modal_data(ack, body, client, view):
         pass
 
 
+#
+#SELL COMMAND + MODAL:
+#
 @app.command('/sell-stocks')
 def open_sell_modal(ack, body, client):
     ack()
@@ -142,6 +148,24 @@ def update_to_sell_modal_4(ack, body, client, view):
         set_stock_as_available(stock_symbol, user, amount)
     else:
         error_modal(ack, body, client)
+
+
+#
+#TAKE OFF MARKET COMMAND:
+#
+@app.command('/take-off-market')
+def take_off_market(ack, command, respond):
+    ack()
+    user = command['user']
+    stock_symbol_plus_amount = command['text']
+    stock_symbol_plus_amount = stock_symbol_plus_amount.split(' ')
+    stock_symbol = stock_symbol_plus_amount[0]
+    amount = int(stock_symbol_plus_amount[1])
+    try:
+        set_stock_as_unavailable(stock_symbol, user, amount)
+        respond("The requested stocks have been set as unavailable for purchase", response_type=ephemeral)
+    except:
+        respond("An error has occured, either you do not own the stocks that you wish to take off of the market, or a bug has occured. If it is a bug please contact Marius S., informing him of the error!")
 
 
 # Start your app
