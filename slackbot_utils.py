@@ -394,3 +394,33 @@ def sell_modal_3(ack, body, client, user, stock_name):
 		trigger_id=body["trigger_id"],
 		view=view_template
 	)
+
+
+def error_modal(ack, body, client):
+	client.views_open(
+		trigger_id=body["trigger_id"],
+		view={
+	"type": "modal",
+	"callback_id": "sell_modal_4",
+	"title": {
+		"type": "plain_text",
+		"text": "Hack Club Stock Exchange",
+		"emoji": true
+	},
+	"close": {
+		"type": "plain_text",
+		"text": "Cancel",
+		"emoji": true
+	},
+	"blocks": [
+		{
+			"type": "header",
+			"text": {
+				"type": "plain_text",
+				"text": "There has been an Error, Contact @Marius S., and inform him of the error! ",
+				"emoji": true
+			}
+		}
+	]
+}
+	)
