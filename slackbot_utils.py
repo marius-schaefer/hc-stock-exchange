@@ -424,3 +424,72 @@ def error_modal(ack, body, client):
 	]
 }
 	)
+
+
+def stock_creation_modal(ack, body, client)
+	client.views_open(
+		trigger_id=body["trigger_id"],
+		view={
+	"title": {
+		"type": "plain_text",
+		"text": "Hack Club Stock Exchange",
+		"emoji": True
+	},
+	"submit": {
+		"type": "plain_text",
+		"text": "Proceed"
+	},
+	"type": "modal",
+	"callback_id": "buy_modal_3",
+	"close": {
+		"type": "plain_text",
+		"text": "Cancel",
+		"emoji": True
+	},
+	"blocks": [
+		{
+			"type": "header",
+			"text": {
+				"type": "plain_text",
+				"text": "Create a Stock:",
+				"emoji": True
+			}
+		},
+		{
+			"type": "context",
+			"elements": [
+				{
+					"type": "mrkdwn",
+					"text": "Fill in the fields with the appropriate information. Press proceed when done, if you have not created a stock already and the stock you wish to create does not exist yet, you will receive further instructions. Otherwise you will receive an Error Message."
+				}
+			]
+		},
+		{
+			"type": "input",
+			"block_id" : "stock_name_input_block",
+			"element": {
+				"type": "plain_text_input",
+				"action_id": "stock_name"
+			},
+			"label": {
+				"type": "plain_text",
+				"text": "Stock Name (Example: Corgi Coin)",
+				"emoji": True
+			}
+		},
+		{
+			"type": "input",
+			"block_id" : "stock_symbol_input"
+			"element": {
+				"type": "plain_text_input",
+				"action_id": "stock_symbol"
+			},
+			"label": {
+				"type": "plain_text",
+				"text": "Stock Symbol/Ticker  (Example: DOGE, Tip: try keep it short and simple/memorable!)",
+				"emoji": True
+			}
+		}
+	]
+}
+	)
