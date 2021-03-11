@@ -134,12 +134,14 @@ def update_to_sell_modal_4(ack, body, client, view):
     ack()
     user=body["user"]["id"]
     amount_to_sell = view['state']['values']['static_select']['amount-to-sell']
-
     split_amount_to_sell = amount_to_sell.split('-')
     stock_symbol = split_amount_to_sell[0]
     amount = split_amount_to_sell[1]
-
-    sell_modal_4(ack, body, client, user, stock_symbol, amount)
+    amount = int(amount)
+    if check_if_can_be_sold(user, stock_symbol, amount) == True:
+        set_stock_as_available(stock_symbol, user, amount)
+    else:
+        error_modal(ack, body, client)
 
 
 # Start your app
