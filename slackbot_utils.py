@@ -526,6 +526,36 @@ def stock_created_notif(client):
 	"title": {
 		"type": "plain_text",
 		"text": "Hack Club Stock Exchange",
+		"emoji": True
+	},
+	"type": "modal",
+	"callback_id": "buy_modal_3",
+	"close": {
+		"type": "plain_text",
+		"text": "Close",
+		"emoji": True
+	},
+	"blocks": [
+		{
+			"type": "header",
+			"text": {
+				"type": "plain_text",
+				"text": "Congratulations on creating your own stock! In order to sell your stock use the command /sell-stocks!",
+				"emoji": True
+			}
+		}
+	]
+}
+	)
+
+
+def stock_creation_modal_2(ack, body, client)
+	client.view_open(
+		trigger_id=body["trigger_id"],
+		view={
+	"title": {
+		"type": "plain_text",
+		"text": "Hack Club Stock Exchange",
 		"emoji": true
 	},
 	"type": "modal",
@@ -540,7 +570,15 @@ def stock_created_notif(client):
 			"type": "header",
 			"text": {
 				"type": "plain_text",
-				"text": "Congratulations on creating your own stock! In order to sell your stock use the command /sell-stocks!",
+				"text": "Just one last step...",
+				"emoji": true
+			}
+		},
+		{
+			"type": "section",
+			"text": {
+				"type": "plain_text",
+				"text": "In order to create a stock you will have to pay a one time fee of 75 HN. In order to pay the one time fee, go to your HN dashboard and pay the appropriate invoice using /pay ! Once you have payed the appropriate invoice your stock will be created immeadietly. If not of course contact @Marius S.!",
 				"emoji": true
 			}
 		}
