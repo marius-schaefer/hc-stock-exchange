@@ -276,6 +276,7 @@ def sell_modal_2(ack, body, client, user):
 			},
 			"accessory": {
 				"type": "static_select",
+				"block_id" : "static_select",
 				"placeholder": {
 					"type": "plain_text",
 					"text": "Select an item",
@@ -311,7 +312,30 @@ def sell_modal_2(ack, body, client, user):
 		trigger_id=body["trigger_id"],
 		view=view_template
 	)
-
+ {
+	"title": {
+		"type": "plain_text",
+		"text": "Hack Club Stock Exchange",
+		"emoji": true
+	},
+	"type": "modal",
+	"callback_id": "buy_modal_3",
+	"close": {
+		"type": "plain_text",
+		"text": "Close",
+		"emoji": true
+	},
+	"blocks": [
+		{
+			"type": "header",
+			"text": {
+				"type": "plain_text",
+				"text": "Congratulations on creating your own stock! In order to sell your stock use the command /sell-stocks!",
+				"emoji": true
+			}
+		}
+	]
+}
 
 def sell_modal_3(ack, body, client, user, stock_name):
 	portfolio = get_portfolio(user)
@@ -353,6 +377,7 @@ def sell_modal_3(ack, body, client, user, stock_name):
 			},
 			"accessory": {
 				"type": "static_select",
+				"block_id" : "static_select",
 				"placeholder": {
 					"type": "plain_text",
 					"text": "Select an item",
@@ -401,7 +426,6 @@ def error_modal(ack, body, client):
 		trigger_id=body["trigger_id"],
 		view={
 	"type": "modal",
-	"callback_id": "sell_modal_4",
 	"title": {
 		"type": "plain_text",
 		"text": "Hack Club Stock Exchange",
@@ -440,7 +464,7 @@ def stock_creation_modal(ack, body, client)
 		"text": "Proceed"
 	},
 	"type": "modal",
-	"callback_id": "buy_modal_3",
+	"callback_id": "stock_creation_modal",
 	"close": {
 		"type": "plain_text",
 		"text": "Cancel",
@@ -488,6 +512,36 @@ def stock_creation_modal(ack, body, client)
 				"type": "plain_text",
 				"text": "Stock Symbol/Ticker  (Example: DOGE, Tip: try keep it short and simple/memorable!)",
 				"emoji": True
+			}
+		}
+	]
+}
+	)
+
+
+def stock_created_notif(client):
+	client.views_open(
+		trigger_id=body["trigger_id"],
+		view={
+	"title": {
+		"type": "plain_text",
+		"text": "Hack Club Stock Exchange",
+		"emoji": true
+	},
+	"type": "modal",
+	"callback_id": "buy_modal_3",
+	"close": {
+		"type": "plain_text",
+		"text": "Close",
+		"emoji": true
+	},
+	"blocks": [
+		{
+			"type": "header",
+			"text": {
+				"type": "plain_text",
+				"text": "Congratulations on creating your own stock! In order to sell your stock use the command /sell-stocks!",
+				"emoji": true
 			}
 		}
 	]
