@@ -3,6 +3,7 @@ import os
 from slack_bolt import App
 from slackbot_utils import *
 from hn_utils import *
+from db_utils import *
 import time
 
 
@@ -175,6 +176,21 @@ def take_off_market(ack, command, respond):
 def create_stock(ack, command, body, client):
     ack()
     stock_creation_modal(ack, body, client)
+
+
+@app.view("stock_creation_modal")
+def stock_creation_step_2(ack, body, client, view):
+    ack()
+    user = body["user"]["id"]
+    if check_stock_creation_conditions(user) == True:
+        stock_name = view['state']['values']['stock_name_input_block']['stock_name']
+        stock_symbol = view['state']['values']['stock_symbol_input']['stock_symbol']
+        add_stock_creator_to_db(user)
+        add_stock_to_stock_table(stock_name, stock_symbol, user)
+        add_stock_to_all_stocks_table(stock_name, stock_symbol, user)
+        stock_created_notif(client)
+    else:
+        error_modal(ack, body, client)
 
 
 # Start your app
