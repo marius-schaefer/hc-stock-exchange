@@ -185,10 +185,24 @@ def stock_creation_step_2(ack, body, client, view):
     if check_stock_creation_conditions(user) == True:
         stock_name = view['state']['values']['stock_name_input_block']['stock_name']
         stock_symbol = view['state']['values']['stock_symbol_input']['stock_symbol']
-        add_stock_creator_to_db(user)
-        add_stock_to_stock_table(stock_name, stock_symbol, user)
-        add_stock_to_all_stocks_table(stock_name, stock_symbol, user)
-        stock_created_notif(client)
+        create_invoice(75, user)
+        stock_creation_modal_2(ack, body, client)
+        i = 0
+        while i != 15:
+            time.sleep(20)
+            if check_for_hn_transaction(user, 75) == True:
+                one_time_fee = True
+                break
+            else:
+                one_time_fee = False
+            i += 1
+        if one_time_fee == True:
+            add_stock_creator_to_db(user)
+            add_stock_to_stock_table(stock_name, stock_symbol, user)
+            add_stock_to_all_stocks_table(stock_name, stock_symbol, user)
+            stock_created_notif(client)
+        else:
+            pass
     else:
         error_modal(ack, body, client)
 
