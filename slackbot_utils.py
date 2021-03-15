@@ -2,7 +2,7 @@ from slack_bolt import App
 from db_utils import *
 
 
-def buy_modal_1(ack, body, client):
+def buy_modal_1(client):
     all_availble_stocks = get_all_available_stock_data()
 
     view_template = {
@@ -202,7 +202,7 @@ def buy_modal_3(ack, body, client, stock_symbol_plus_amount):
 
 
 #Modal for Getting the User_ID
-def sell_modal_1(ack, body, client):
+def sell_modal_1(client):
 	client.views_open(
 		trigger_id=body["trigger_id"],
 		view={
@@ -550,7 +550,7 @@ def stock_created_notif(client):
 
 
 def stock_creation_modal_2(ack, body, client)
-	client.view_open(
+	client.views_open(
 		trigger_id=body["trigger_id"],
 		view={
 	"title": {
@@ -585,3 +585,154 @@ def stock_creation_modal_2(ack, body, client)
 	]
 }
 	)
+
+
+def open_dashboard(client, event, logger)
+	total_amount_of_stocks = 0
+	total_value = 0
+	
+	view_template = {
+	"type": "home",
+	"blocks": [
+		{
+			"type": "header",
+			"text": {
+				"type": "plain_text",
+				"text": "Your HSE Dashboard ",
+				"emoji": True
+			}
+		},
+		{
+			"type": "divider"
+		},
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": f"*Total Amount of Stocks:* {total_amount_of_stocks}"
+			}
+		},
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": f"*Total Value of all Stocks:* {total_value}"
+			}
+		},
+		{
+			"type": "divider"
+		},
+		{
+			"type": "header",
+			"text": {
+				"type": "plain_text",
+				"text": "Your Stocks:",
+				"emoji": True
+			}
+		},
+	]
+}
+	action_extension = [{
+			"type": "divider"
+		},
+		{
+			"type": "header",
+			"text": {
+				"type": "plain_text",
+				"text": "Actions:",
+				"emoji": True
+			}
+		},
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "*Buy Stocks*"
+			},
+			"accessory": {
+				"type": "button",
+				"text": {
+					"type": "plain_text",
+					"text": "Buy Stocks",
+					"emoji": True
+				},
+				"value": "click_me_123",
+				"action_id": "buy_button"
+			}
+		},
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "*Sell Stocks*"
+			},
+			"accessory": {
+				"type": "button",
+				"text": {
+					"type": "plain_text",
+					"text": "Sell Stocks",
+					"emoji": True
+				},
+				"value": "click_me_123",
+				"action_id": "sell_button"
+			}
+		},
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "*Give Stocks*"
+			},
+			"accessory": {
+				"type": "button",
+				"text": {
+					"type": "plain_text",
+					"text": "Give Stocks",
+					"emoji": True
+				},
+				"value": "click_me_123",
+				"action_id": "button-action"
+			}
+		}]	
+	user = event["user"]
+	portfolio = get_portfolio(user)
+	
+	if len(portfolio) == 0:
+		no_stocks_extension = {
+			"type": "context",
+			"elements": [
+				{
+					"type": "plain_text",
+					"text": "At the moment you do not own any stocks, to purchase stocks press the buy stocks button below!",
+					"emoji": True
+				}
+			]
+		}
+		view_template['blocks'].append(no_stocks_extension)
+		view_template['blocks'].extend(action_extension)
+	else:
+		for stock in portfolio:
+			stock_name = stock
+			stock_symbol = get_stock_symbol(stock)
+			stock_price = get_stock_price(stock)
+			amount = portfolio[stock]
+			stock_value = stock_price * amount
+			mrkdwn_format_template = {
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": f"*{stock_name}* ({stock_symbol}) | *{amount} Stocks* | Price per Stock: {stock_price} HN | Total Value: {stock_value} HN"
+			}
+		}
+			view_template['blocks'].append(mrkdwn_format_template)
+			total_amount_of_stocks += amount
+			total_value += stock_value
+		view_template['blocks'].extend(action_extension)
+
+	try:
+		client.views_publish(
+			user_id=event["user"],
+			view=view_template
+		)
+	except:
+		pass
