@@ -208,6 +208,14 @@ def stock_creation_step_2(ack, body, client, view):
 
 
 #
+#Dashboard/ App Home:
+#
+@app.event("app_home_opened")
+def update_home_tab(client, event, logger):
+    open_dashboard(client, event, logger)
+
+
+#
 # Button Actions:
 #
 @app.action('buy_button')
