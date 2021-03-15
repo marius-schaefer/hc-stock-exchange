@@ -54,7 +54,7 @@ def message_hello(message, say):
 @app.command('/buy-stocks')
 def open_buy_modal_1(ack, body, client):
     ack()
-    buy_modal_1(ack, body, client)
+    buy_modal_1(client)
 
 
 @app.view('buy_modal_1')
@@ -114,7 +114,7 @@ def handle_submitted_buy_modal_data(ack, body, client, view):
 @app.command('/sell-stocks')
 def open_sell_modal(ack, body, client):
     ack()
-    sell_modal_1(ack, body, client)
+    sell_modal_1(client)
 
 
 #Once Sell_modal_1 is submitted, gets the user ID and triggers the second sell modal:
@@ -205,6 +205,27 @@ def stock_creation_step_2(ack, body, client, view):
             pass
     else:
         error_modal(ack, body, client)
+
+
+#
+# Button Actions:
+#
+@app.action('buy_button')
+def buy_button(ack, client):
+    ack()
+    buy_modal_1(client)
+
+
+@app.action('sell_button')
+def sell_button(ack, client):
+    ack()
+    sell_modal_1(client)
+
+
+@app.action('give_button')
+def give_button(ack, client):
+    ack()
+    give_modal_1(client)
 
 
 # Start your app
