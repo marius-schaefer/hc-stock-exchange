@@ -736,3 +736,36 @@ def open_dashboard(client, event, logger)
 		)
 	except Exception as e:
 		logger.error(f"Error publishing home tab: {e}")
+
+
+def open_give_modal_1(ack, body, client):
+	client.views_open(
+		trigger_id=body["trigger_id"],
+		view={
+	"type": "modal",
+	"title": {
+		"type": "plain_text",
+		"text": "Hack Club Stock Exchange",
+		"emoji": true
+	},
+	"submit": {
+		"type": "plain_text",
+		"text": "Proceed",
+		"emoji": true
+	},
+	"close": {
+		"type": "plain_text",
+		"text": "Cancel",
+		"emoji": true
+	},
+	"blocks": [
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "*Press proceed to continue!*"
+			}
+		}
+	]
+}
+	)
