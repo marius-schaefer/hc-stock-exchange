@@ -236,6 +236,15 @@ def give_button(ack, client):
     give_modal_1(client)
 
 
+#
+#GIVE STOCK COMMAND:
+#
+@app.command('/give-stocks')
+def give_stock_modal(ack, client, command, body):
+    ack()
+    open_give_modal_1(ack, body, client)
+
+
 # Start your app
 if __name__ == "__main__":
     app.start(port=int(os.environ.get("PORT", 3000)))
