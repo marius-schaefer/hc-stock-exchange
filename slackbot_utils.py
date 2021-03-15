@@ -734,5 +734,5 @@ def open_dashboard(client, event, logger)
 			user_id=event["user"],
 			view=view_template
 		)
-	except:
-		pass
+	except Exception as e:
+		logger.error(f"Error publishing home tab: {e}")
