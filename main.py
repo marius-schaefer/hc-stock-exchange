@@ -245,6 +245,13 @@ def give_stock_modal(ack, client, command, body):
     open_give_modal_1(ack, body, client)
 
 
+@app.view('give_modal_1')
+def give_stock_modal_2(ack, body, client, view):
+    user = body["user"]["id"]
+    ack()
+    open_give_modal_2(ack, body, client, user)
+
+
 # Start your app
 if __name__ == "__main__":
     app.start(port=int(os.environ.get("PORT", 3000)))
