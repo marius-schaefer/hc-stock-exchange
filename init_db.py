@@ -25,13 +25,13 @@ def create_all_stocks_table():
     c = conn.cursor()
 
     #creates all-stocks table
-    c.execute("""CREATE TABLE all-stocks (
+    c.execute("""CREATE TABLE allstocks (
             stock_id text,
             stock_name text,
             stock_symbol text,
             available text,
             stock_owner text,
-            stock_creator text,
+            stock_creator text
     )""")
     
     conn.commit()
@@ -49,7 +49,7 @@ def create_stock_table():
             stock_name text,
             stock_symbol text,
             stock_price interger,
-            stock_creator text,
+            stock_creator text
     )""")
     
     conn.commit()
@@ -65,7 +65,7 @@ def create_trades_table():
     #creates trades table
     c.execute("""CREATE TABLE trades (
             stock_symbol text,
-            trade_time text,
+            trade_time text
     )""")
     
     conn.commit()
@@ -79,9 +79,8 @@ def create_stock_creator_table():
     c = conn.cursor()
 
     #creates stock-creator table
-    c.execute("""CREATE TABLE stock-creator (
-            stock_creator text,
-            stock_symbol text,
+    c.execute("""CREATE TABLE stockcreator (
+            stock_creator text
     )""")
     
     conn.commit()
