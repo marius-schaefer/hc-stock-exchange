@@ -56,7 +56,7 @@ def set_stock_owner(stock_symbol, owner, new_owner, amount):
     c = conn.cursor()
 
     #Inputing what we want to do:
-    c.execute("""UPDATE all-stocks SET stock_owner = ? 
+    c.execute("""UPDATE allstocks SET stock_owner = ? 
                 WHERE stock_owner = ? AND stock_symbol = ? AND available = True LIMIT ?""", (new_owner, owner, stock_symbol, amount,))
     #Executing our instructions from above:
     conn.commit()
@@ -71,7 +71,7 @@ def set_stock_as_available(stock_symbol, owner, amount):
     c = conn.cursor()
 
     #Inputing what we want to do
-    c.execute("""UPDATE all-stocks SET available = True
+    c.execute("""UPDATE allstocks SET available = True
                 WHERE stock_owner = ? AND stock_symbol = ? LIMIT ?""", (owner, stock_symbol, amount))
     
     #Executing our instructions from above:
@@ -87,7 +87,7 @@ def set_stock_as_unavailable(stock_symbol, owner, amount):
     c = conn.cursor()
 
     #Inputing what we want to do
-    c.execute("""UPDATE all-stocks SET available = False
+    c.execute("""UPDATE allstocks SET available = False
                 WHERE stock_owner = ? AND stock_symbol = ? LIMIT ?""", (owner, stock_symbol, amount))
     
     #Executing our instructions from above:
@@ -104,7 +104,7 @@ def get_portfolio(user):
         c = conn.cursor()
 
         #Selecting the data we want:
-        c.execute("""SELECT * FROM all-stocks WHERE stock_owner = ?""", (user,))
+        c.execute("""SELECT * FROM allstocks WHERE stock_owner = ?""", (user,))
 
         #Actually getting the data and storing it in the variable stocks
         stocks = c.fetchall()
@@ -153,7 +153,7 @@ def check_if_can_be_sold(owner, stock_symbol, amount):
     c = conn.cursor()
 
     #Selecting the data we want to get from the db
-    c.execute("SELECT * FROM all-stocks WHERE stock_symbol = ? AND stock_owner = ?", (stock_symbol, owner))
+    c.execute("SELECT * FROM allstocks WHERE stock_symbol = ? AND stock_owner = ?", (stock_symbol, owner))
 
     #Getting the data we selected:
     stocks = c.fetchall()
@@ -235,7 +235,7 @@ def add_stock_to_all_stocks_table(stock_name, stock_symbol, stock_creator):
         c = conn.cursor()  
 
         #Adds the data of the stock we want to add:
-        c.execute("INSERT INTO all-stocks VALUES (?, ?, ?, 'False', ?, ?)", (stock_id, stock_name, stock_symbol, stock_creator, stock_creator)) 
+        c.execute("INSERT INTO allstocks VALUES (?, ?, ?, 'False', ?, ?)", (stock_id, stock_name, stock_symbol, stock_creator, stock_creator)) 
 
         conn.commit()
         conn.close()
@@ -332,7 +332,7 @@ def set_stock_owner_plus_payout(stock_symbol, new_owner, amount):
     c = conn.cursor()
     
     #Inputing the data we want to get:
-    c.execute("SELECT rowid, * FROM all-stocks WHERE stock_symbol = ? AND available = True LIMIT ?", (stock_symbol, amount))
+    c.execute("SELECT rowid, * FROM allstocks WHERE stock_symbol = ? AND available = True LIMIT ?", (stock_symbol, amount))
 
     #Getting the data from the db and storing it in a variable
     stocks_to_change_owner_for = c.fetchall()
@@ -359,7 +359,7 @@ def set_stock_owner_plus_payout(stock_symbol, new_owner, amount):
         conn = sqlite3.connect('hse.db')
         c = conn.cursor()
 
-        c.execute("""UPDATE all-stocks SET stock_owner = ?
+        c.execute("""UPDATE allstocks SET stock_owner = ?
                     WHERE rowid = ?""", (new_owner, primary_key))
 
         #Executing our instructions from above:
@@ -401,7 +401,7 @@ def get_all_available_stock_data():
     all_availble_stocks = []
     
     for stock in all_stocks:
-        c.execute("SELECT * FROM all-stocks WHERE stock_symbol = ? AND available = TRUE", (stock[1],))
+        c.execute("SELECT * FROM allstocks WHERE stock_symbol = ? AND available = TRUE", (stock[1],))
         available_stocks = c.fetchall()
         if available_stocks != None:
             amount_of_available_stocks = len(available_stocks)
@@ -423,7 +423,7 @@ def get_amount_of_available_stocks(stock_symbol):
     #creates cursor
     c = conn.cursor()
 
-    c.execute("SELECT * FROM all-stocks WHERE stock_symbol = ? AND available = TRUE", (stock_symbol,))
+    c.execute("SELECT * FROM allstocks WHERE stock_symbol = ? AND available = TRUE", (stock_symbol,))
 
     available = c.fetchall()
     
