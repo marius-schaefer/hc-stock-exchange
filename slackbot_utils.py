@@ -312,30 +312,7 @@ def sell_modal_2(ack, body, client, user):
 		trigger_id=body["trigger_id"],
 		view=view_template
 	)
- {
-	"title": {
-		"type": "plain_text",
-		"text": "Hack Club Stock Exchange",
-		"emoji": true
-	},
-	"type": "modal",
-	"callback_id": "buy_modal_3",
-	"close": {
-		"type": "plain_text",
-		"text": "Close",
-		"emoji": true
-	},
-	"blocks": [
-		{
-			"type": "header",
-			"text": {
-				"type": "plain_text",
-				"text": "Congratulations on creating your own stock! In order to sell your stock use the command /sell-stocks!",
-				"emoji": true
-			}
-		}
-	]
-}
+ 
 
 def sell_modal_3(ack, body, client, user, stock_name):
 	portfolio = get_portfolio(user)
@@ -738,34 +715,3 @@ def open_dashboard(client, event, logger)
 		logger.error(f"Error publishing home tab: {e}")
 
 
-def open_give_modal_1(ack, body, client):
-	client.views_open(
-		trigger_id=body["trigger_id"],
-		view={
-	"type": "modal",
-	"title": {
-		"type": "plain_text",
-		"text": "Hack Club Stock Exchange",
-		"emoji": true
-	},
-	"submit": {
-		"type": "plain_text",
-		"text": "Proceed",
-		"emoji": true
-	},
-	"close": {
-		"type": "plain_text",
-		"text": "Cancel",
-		"emoji": true
-	},
-	"blocks": [
-		{
-			"type": "section",
-			"text": {
-				"type": "mrkdwn",
-				"text": "*Press proceed to continue!*"
-			}
-		}
-	]
-}
-	)
