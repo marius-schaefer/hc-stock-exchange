@@ -190,7 +190,7 @@ def stock_creation_step_2(ack, body, client, view):
         i = 0
         while i != 15:
             time.sleep(20)
-            if check_for_hn_transaction(user, 75) == True:
+            if check_for_hn_transaction(user, 10) == True:
                 one_time_fee = True
                 break
             else:
@@ -201,6 +201,7 @@ def stock_creation_step_2(ack, body, client, view):
             add_stock_to_stock_table(stock_name, stock_symbol, user)
             add_stock_to_all_stocks_table(stock_name, stock_symbol, user)
             stock_created_notif(client)
+            payout('U014DQS7AE7', 10)
         else:
             pass
     else:
@@ -240,16 +241,20 @@ def give_button(ack, client):
 #GIVE STOCK COMMAND:
 #
 @app.command('/give-stocks')
-def give_stock_modal(ack, client, command, body):
+def give_stock_modal(ack, client, command, body, respond):
     ack()
-    open_give_modal_1(ack, body, client)
+    command_text = command['text']
+    command_text = command_text.split(' ')
+    stock_symbol = command_text[0]
+    amount = command_text[1]
+    to_user = command_text[2]
+    from_user = command['user']
 
-
-@app.view('give_modal_1')
-def give_stock_modal_2(ack, body, client, view):
-    user = body["user"]["id"]
-    ack()
-    open_give_modal_2(ack, body, client, user)
+    if check_if_can_be_sold(from_user, stock_symbol, amount) == True:
+        set_stock_owner(stock_symbol, from_user, to_user, amount)
+        respond("Stock has been given!", response_type=ephemeral)
+    else:
+        error_modal(ack, body, client)
 
 
 # Start your app
