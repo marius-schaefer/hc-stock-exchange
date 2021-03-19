@@ -374,7 +374,7 @@ def update_stock_price(stock_creator):
     trade_count = get_trade_count(stock_creator)
 
     #Calculating the stock price and storing it in a variable:
-    stock_price = (((message_count/300)*50)+(trade_count*50))//100
+    stock_price = (((message_count/200)*50)+(trade_count*50))//100
 
     #creates or connects to an existing db
     conn = sqlite3.connect('hse.db')
