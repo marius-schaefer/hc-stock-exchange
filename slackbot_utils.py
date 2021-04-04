@@ -2,7 +2,7 @@ from slack_bolt import App
 from db_utils import *
 
 
-def buy_modal_1(client):
+def buy_modal_1(client, body):
     all_availble_stocks = get_all_available_stock_data()
 
     view_template = {
@@ -105,9 +105,6 @@ def buy_modal_2(ack, body, client, stock_symbol):
 			}
 		},
 		{
-			"type": "divider"
-		},
-		{
 			"type": "section",
 			"block_id": "static_select",
 			"text": {
@@ -122,6 +119,7 @@ def buy_modal_2(ack, body, client, stock_symbol):
 					"emoji": True
 				},
 				"options": [
+
 				],
 				"action_id": "amount-to-buy"
 			}
@@ -131,18 +129,31 @@ def buy_modal_2(ack, body, client, stock_symbol):
 
     value = 0
     stock_amount = 0
-    for stock in amount_available:
-        stock_amount += 1
-        option = {
-						"text": {
-							"type": "plain_text",
-							"text": f'{stock_symbol}-{stock_amount}',
-							"emoji": True
-						},
-						"value": f"value-{value}"
-					}
-        view_template['blocks'][2]['accessory']['options'].append(option)
-        value += 1
+    try:
+    	while stock_amount < int(amount_available): 
+    		stock_amount += 1
+    		option = {
+    								"text": {
+    									"type": "plain_text",
+										"text": f'{stock_symbol}-{stock_amount}',
+										"emoji": True
+									},
+									"value": f"value-{value}"
+								}
+    		view_template['blocks'][1]['accessory']['options'].append(option)
+    		value += 1
+    except:
+    	stock_amount += 1
+    	option = {
+								"text": {
+									"type": "plain_text",
+									"text": f'{stock_symbol}-{stock_amount}',
+									"emoji": True
+								},
+								"value": f"value-{value}"
+							}
+    	view_template['blocks'][1]['accessory']['options'].append(option)
+    	value += 1
 
 
     client.views_open(
@@ -202,7 +213,7 @@ def buy_modal_3(ack, body, client, stock_symbol_plus_amount):
 
 
 #Modal for Getting the User_ID
-def sell_modal_1(client):
+def sell_modal_1(client, body):
 	client.views_open(
 		trigger_id=body["trigger_id"],
 		view={
@@ -270,21 +281,19 @@ def sell_modal_2(ack, body, client, user):
 		},
 		{
 			"type": "section",
+			"block_id" : "static_select",
 			"text": {
 				"type": "mrkdwn",
 				"text": "Choose a stock to sell:"
 			},
 			"accessory": {
 				"type": "static_select",
-				"block_id" : "static_select",
 				"placeholder": {
 					"type": "plain_text",
 					"text": "Select an item",
 					"emoji": True
 				},
-				"options": [
-
-				],
+				"options": [],
 				"action_id": "stock-to-sell"
 			}
 		}
@@ -297,7 +306,7 @@ def sell_modal_2(ack, body, client, user):
 	#For loop that adds a block for every stock that a user owns:
 	value = 0
 	for stock in portfolio_stocks:
-        option = {
+		option = {
 						"text": {
 							"type": "plain_text",
 							"text": f'{stock}',
@@ -305,18 +314,18 @@ def sell_modal_2(ack, body, client, user):
 						},
 						"value": f"value-{value}"
 					}
-        view_template['blocks'][1]['accessory']['options'].append(option)
-        value += 1
+		view_template['blocks'][1]['accessory']['options'].append(option)
+		value += 1
 
 	client.views_open(
 		trigger_id=body["trigger_id"],
 		view=view_template
-	)
+		)
  
 
 def sell_modal_3(ack, body, client, user, stock_name):
 	portfolio = get_portfolio(user)
-	amount_available =  portfolio[stock_name]
+	amount_available = portfolio[stock_name]
 	stock_symbol = get_stock_symbol(stock_name)
 
 	view_template = {
@@ -325,17 +334,17 @@ def sell_modal_3(ack, body, client, user, stock_name):
 	"title": {
 		"type": "plain_text",
 		"text": "Hack Club Stock Exchange",
-		"emoji": true
+		"emoji": True
 	},
 	"submit": {
 		"type": "plain_text",
 		"text": "Sell",
-		"emoji": true
+		"emoji": True
 	},
 	"close": {
 		"type": "plain_text",
 		"text": "Cancel",
-		"emoji": true
+		"emoji": True
 	},
 	"blocks": [
 		{
@@ -343,10 +352,11 @@ def sell_modal_3(ack, body, client, user, stock_name):
 			"text": {
 				"type": "plain_text",
 				"text": "Select the amount you would like to sell:",
-				"emoji": true
+				"emoji": True
 			}
 		},
 		{
+			"block_id" : "static_select",
 			"type": "section",
 			"text": {
 				"type": "mrkdwn",
@@ -354,11 +364,10 @@ def sell_modal_3(ack, body, client, user, stock_name):
 			},
 			"accessory": {
 				"type": "static_select",
-				"block_id" : "static_select",
 				"placeholder": {
 					"type": "plain_text",
-					"text": "Select an item",
-					"emoji": true
+					"text": "Select amount",
+					"emoji": True
 				},
 				"options": [
 
@@ -378,19 +387,32 @@ def sell_modal_3(ack, body, client, user, stock_name):
 
 	#For Loop that adds the options to view_template:
 	value = 0
-    stock_amount = 0
-    for stock in amount_available:
-        stock_amount += 1
-        option = {
-						"text": {
-							"type": "plain_text",
-							"text": f'{stock_symbol}-{stock_amount}',
-							"emoji": True
-						},
-						"value": f"value-{value}"
-					}
-        view_template['blocks'][1]['accessory']['options'].append(option)
-        value += 1
+	stock_amount = 0
+	try:
+		while stock_amount < amount_available: 
+			stock_amount += 1
+			option = {
+									"text": {
+										"type": "plain_text",
+										"text": f'{stock_symbol}-{stock_amount}',
+										"emoji": True
+									},
+									"value": f"value-{value}"
+								}
+			view_template['blocks'][1]['accessory']['options'].append(option)
+			value += 1
+	except:
+		stock_amount += 1
+		option = {
+								"text": {
+									"type": "plain_text",
+									"text": f'{stock_symbol}-{stock_amount}',
+									"emoji": True
+								},
+								"value": f"value-{value}"
+							}
+		view_template['blocks'][1]['accessory']['options'].append(option)
+		value += 1
 
 	client.views_open(
 		trigger_id=body["trigger_id"],
@@ -406,12 +428,12 @@ def error_modal(ack, body, client):
 	"title": {
 		"type": "plain_text",
 		"text": "Hack Club Stock Exchange",
-		"emoji": true
+		"emoji": True
 	},
 	"close": {
 		"type": "plain_text",
 		"text": "Cancel",
-		"emoji": true
+		"emoji": True
 	},
 	"blocks": [
 		{
@@ -419,7 +441,7 @@ def error_modal(ack, body, client):
 			"text": {
 				"type": "plain_text",
 				"text": "There has been an Error, Contact @Marius S., and inform him of the error! ",
-				"emoji": true
+				"emoji": True
 			}
 		}
 	]
@@ -427,10 +449,8 @@ def error_modal(ack, body, client):
 	)
 
 
-def stock_creation_modal(ack, body, client)
-	client.views_open(
-		trigger_id=body["trigger_id"],
-		view={
+def stock_creation_modal(ack, body, client):
+	view_template={
 	"title": {
 		"type": "plain_text",
 		"text": "Hack Club Stock Exchange",
@@ -480,7 +500,7 @@ def stock_creation_modal(ack, body, client)
 		},
 		{
 			"type": "input",
-			"block_id" : "stock_symbol_input"
+			"block_id" : "stock_symbol_input",
 			"element": {
 				"type": "plain_text_input",
 				"action_id": "stock_symbol"
@@ -493,10 +513,13 @@ def stock_creation_modal(ack, body, client)
 		}
 	]
 }
-	)
+
+	client.views_open(
+		trigger_id=body["trigger_id"],
+		view=view_template)
 
 
-def stock_created_notif(client):
+def stock_created_notif(client, body):
 	client.views_open(
 		trigger_id=body["trigger_id"],
 		view={
@@ -506,7 +529,7 @@ def stock_created_notif(client):
 		"emoji": True
 	},
 	"type": "modal",
-	"callback_id": "buy_modal_3",
+	"callback_id": "stock_created_notif",
 	"close": {
 		"type": "plain_text",
 		"text": "Close",
@@ -526,21 +549,21 @@ def stock_created_notif(client):
 	)
 
 
-def stock_creation_modal_2(ack, body, client)
+def stock_creation_modal_2(ack, body, client):
 	client.views_open(
 		trigger_id=body["trigger_id"],
 		view={
 	"title": {
 		"type": "plain_text",
 		"text": "Hack Club Stock Exchange",
-		"emoji": true
+		"emoji": True
 	},
 	"type": "modal",
-	"callback_id": "buy_modal_3",
+	"callback_id": "stock_creation_modal_2",
 	"close": {
 		"type": "plain_text",
 		"text": "Close",
-		"emoji": true
+		"emoji": True
 	},
 	"blocks": [
 		{
@@ -548,7 +571,7 @@ def stock_creation_modal_2(ack, body, client)
 			"text": {
 				"type": "plain_text",
 				"text": "Just one last step...",
-				"emoji": true
+				"emoji": True
 			}
 		},
 		{
@@ -556,7 +579,7 @@ def stock_creation_modal_2(ack, body, client)
 			"text": {
 				"type": "plain_text",
 				"text": "In order to create a stock you will have to pay a one time fee of 75 HN. In order to pay the one time fee, go to your HN dashboard and pay the appropriate invoice using /pay ! Once you have payed the appropriate invoice your stock will be created immeadietly. If not of course contact @Marius S.!",
-				"emoji": true
+				"emoji": True
 			}
 		}
 	]
@@ -564,9 +587,15 @@ def stock_creation_modal_2(ack, body, client)
 	)
 
 
-def open_dashboard(client, event, logger)
+def open_dashboard(client, event, logger):
+	user = event["user"]
+	portfolio = get_portfolio(user)
 	total_amount_of_stocks = 0
 	total_value = 0
+	for stock in portfolio:
+		amount_in_portfolio = portfolio[stock]
+		total_amount_of_stocks += amount_in_portfolio
+		total_value += (get_stock_price(stock) * amount_in_portfolio)
 	
 	view_template = {
 	"type": "home",
@@ -586,14 +615,14 @@ def open_dashboard(client, event, logger)
 			"type": "section",
 			"text": {
 				"type": "mrkdwn",
-				"text": f"*Total Amount of Stocks:* {total_amount_of_stocks}"
+				"text": f":stonks: *Total Amount of Stocks:* {total_amount_of_stocks}"
 			}
 		},
 		{
 			"type": "section",
 			"text": {
 				"type": "mrkdwn",
-				"text": f"*Total Value of all Stocks:* {total_value}"
+				"text": f":moneybag: *Total Value of all Stocks:* {total_value} HN"
 			}
 		},
 		{
@@ -653,26 +682,7 @@ def open_dashboard(client, event, logger)
 				"value": "click_me_123",
 				"action_id": "sell_button"
 			}
-		},
-		{
-			"type": "section",
-			"text": {
-				"type": "mrkdwn",
-				"text": "*Give Stocks*"
-			},
-			"accessory": {
-				"type": "button",
-				"text": {
-					"type": "plain_text",
-					"text": "Give Stocks",
-					"emoji": True
-				},
-				"value": "click_me_123",
-				"action_id": "button-action"
-			}
 		}]	
-	user = event["user"]
-	portfolio = get_portfolio(user)
 	
 	if len(portfolio) == 0:
 		no_stocks_extension = {
