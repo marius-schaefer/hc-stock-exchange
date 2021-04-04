@@ -10,7 +10,7 @@ import time
 
 
 #checks if all-stocks table exists in the db
-all_stocks_table = check_for_table('all-stocks')
+all_stocks_table = check_for_table('allstocks')
 #creates all-stocks table if the table does not exist
 if not all_stocks_table:
     create_all_stocks_table()
@@ -28,16 +28,16 @@ if not trades_table:
     create_trades_table()
 
 #checks if stock-creator table exists in the db
-stock_creator_table = check_for_table('stock-creator')
+stock_creator_table = check_for_table('stockcreator')
 #creates stock-creator table if the table does not exist
 if not stock_creator_table:
-   create_stock_creator_table
+   create_stock_creator_table()
 
 
 # Initializes your app with your bot token and signing secret
 app = App(
-    token='TOKEN',
-    signing_secret='SIGNING SECRET'
+    token='PUT TOKEN HERE',
+    signing_secret='PUT SIGNING SECRET HERE'
 )
 
 
@@ -54,12 +54,12 @@ def message_hello(message, say):
 @app.command('/buy-stocks')
 def open_buy_modal_1(ack, body, client):
     ack()
-    buy_modal_1(client)
+    buy_modal_1(client, body)
 
 
 @app.view('buy_modal_1')
 def update_to_buy_modal_2(ack, body, client, view):
-    stock_to_buy = view['state']['values']['static_select']['stock-to-buy']
+    stock_to_buy = view['state']['values']['static_select']['stock-to-buy']['selected_option']['text']['text']
     stock_symbol_to_buy = stock_to_buy.split('"')
     stock_symbol = stock_symbol_to_buy[1]
 
@@ -70,7 +70,7 @@ def update_to_buy_modal_2(ack, body, client, view):
 
 @app.view('buy_modal_2')
 def update_to_buy_modal_3(ack, body, client, view):
-    stock_symbol_plus_amount = view['state']['values']['static_select']['amount-to-buy']
+    stock_symbol_plus_amount = view['state']['values']['static_select']['amount-to-buy']['selected_option']['text']['text']
     
     ack()
 
@@ -82,7 +82,7 @@ def handle_submitted_buy_modal_data(ack, body, client, view):
     #Getting Data from the submitted modals
     user=body["user"]["id"]
     values=view['title']['text']
-
+    ack()
     #Spliting values inorder to get the stock symbol and amount
     split_values = values.split(' ')
 
@@ -101,7 +101,7 @@ def handle_submitted_buy_modal_data(ack, body, client, view):
     create_invoice(total_price, user)
 
     #Sleep for 3 minutes and then check for a hn transaction
-    time.sleep(180)
+    time.sleep(120)
     if check_for_hn_transaction(user, total_price):
         set_stock_owner_plus_payout(stock_symbol, user, amount)
     else:
@@ -114,14 +114,14 @@ def handle_submitted_buy_modal_data(ack, body, client, view):
 @app.command('/sell-stocks')
 def open_sell_modal(ack, body, client):
     ack()
-    sell_modal_1(client)
+    sell_modal_1(client, body)
 
 
 #Once Sell_modal_1 is submitted, gets the user ID and triggers the second sell modal:
 @app.view('sell_modal_1')
 def update_to_sell_modal_2(ack, body, client, view):
-    ack()
     user=body["user"]["id"]
+    ack()
 
     #Opens the second sell_modal:
     sell_modal_2(ack, body, client, user)
@@ -130,18 +130,18 @@ def update_to_sell_modal_2(ack, body, client, view):
 #Once Sell_modal_2 is submitted gets the selected stock and opens the third sell_modal:
 @app.view('sell_modal_2')
 def update_to_sell_modal_3(ack, body, client, view):
-    ack()
     user=body["user"]["id"]
-    stock_name = view['state']['values']['static_select']['stock-to-sell']
+    stock_name = view['state']['values']['static_select']['stock-to-sell']['selected_option']['text']['text']
+    ack()
     sell_modal_3(ack, body, client, user, stock_name)
     
 
 @app.view('sell_modal_3')
 def update_to_sell_modal_4(ack, body, client, view):
-    ack()
     user=body["user"]["id"]
-    amount_to_sell = view['state']['values']['static_select']['amount-to-sell']
+    amount_to_sell = view['state']['values']['static_select']['amount-to-sell']['selected_option']['text']['text']
     split_amount_to_sell = amount_to_sell.split('-')
+    ack()
     stock_symbol = split_amount_to_sell[0]
     amount = split_amount_to_sell[1]
     amount = int(amount)
@@ -180,31 +180,27 @@ def create_stock(ack, command, body, client):
 
 @app.view("stock_creation_modal")
 def stock_creation_step_2(ack, body, client, view):
-    ack()
     user = body["user"]["id"]
     if check_stock_creation_conditions(user) == True:
-        stock_name = view['state']['values']['stock_name_input_block']['stock_name']
-        stock_symbol = view['state']['values']['stock_symbol_input']['stock_symbol']
+        stock_name = str(view['state']['values']['stock_name_input_block']['stock_name']['value'])
+        stock_symbol = str(view['state']['values']['stock_symbol_input']['stock_symbol']['value'])
         create_invoice(75, user)
+        ack()
         stock_creation_modal_2(ack, body, client)
-        i = 0
-        while i != 15:
-            time.sleep(20)
-            if check_for_hn_transaction(user, 10) == True:
-                one_time_fee = True
-                break
-            else:
-                one_time_fee = False
-            i += 1
-        if one_time_fee == True:
+        time.sleep(180)
+        if check_for_hn_transaction(user, 75) == True:    
             add_stock_creator_to_db(user)
             add_stock_to_stock_table(stock_name, stock_symbol, user)
             add_stock_to_all_stocks_table(stock_name, stock_symbol, user)
-            stock_created_notif(client)
-            payout('U014DQS7AE7', 10)
+            payout('U014DQS7AE7', 25)
+            payout('UHFEGV147', 25)
+            payout('U01C21G88QM', 10)
+            payout('U017EPB6LE9', 5)
+            payout('U015MMJ6XKP', 5)
         else:
             pass
     else:
+        ack()
         error_modal(ack, body, client)
 
 
@@ -220,21 +216,15 @@ def update_home_tab(client, event, logger):
 # Button Actions:
 #
 @app.action('buy_button')
-def buy_button(ack, client):
+def buy_button(ack, client, body):
     ack()
-    buy_modal_1(client)
+    buy_modal_1(client, body)
 
 
 @app.action('sell_button')
-def sell_button(ack, client):
+def sell_button(ack, client, body):
     ack()
-    sell_modal_1(client)
-
-
-@app.action('give_button')
-def give_button(ack, client):
-    ack()
-    give_modal_1(client)
+    sell_modal_1(client, body)
 
 
 #
