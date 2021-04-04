@@ -57,7 +57,7 @@ def set_stock_owner(stock_symbol, owner, new_owner, amount):
 
     #Inputing what we want to do:
     c.execute("""UPDATE allstocks SET stock_owner = ? 
-                WHERE stock_owner = ? AND stock_symbol = ? AND available = True LIMIT ?""", (new_owner, owner, stock_symbol, amount,))
+                WHERE stock_owner = ? AND stock_symbol = ? AND available = True LIMIT ?""", (new_owner, owner, stock_symbol, amount))
     #Executing our instructions from above:
     conn.commit()
     #closing the db:
@@ -71,8 +71,7 @@ def set_stock_as_available(stock_symbol, owner, amount):
     c = conn.cursor()
 
     #Inputing what we want to do
-    c.execute("""UPDATE allstocks SET available = True
-                WHERE stock_owner = ? AND stock_symbol = ? LIMIT ?""", (owner, stock_symbol, amount))
+    c.execute("UPDATE allstocks SET available = 'True' WHERE rowid IN (SELECT rowid FROM allstocks WHERE stock_owner = ? AND stock_symbol = ? LIMIT ?)", (owner, stock_symbol, amount))
     
     #Executing our instructions from above:
     conn.commit()
@@ -179,7 +178,7 @@ def check_stock_creation_conditions(user_id):
     c = conn.cursor()
     
     #Selecting the data we want to get from the db
-    c.execute("SELECT * FROM stockcreator WHERE stock_creator = ?", (user_id,))
+    c.execute("SELECT * FROM stockcreator")
 
     #Getting the data we selected:
     created_stock = c.fetchall()
@@ -187,10 +186,13 @@ def check_stock_creation_conditions(user_id):
     conn.commit()
     conn.close()
 
-    if created_stock == None:
-        return True
-    else:
-        return False
+    for data in created_stock:
+        if data[0] == user_id:
+            return False
+        else:
+            pass
+    return True
+
 
 
 def add_stock_creator_to_db(user_id):
@@ -200,7 +202,7 @@ def add_stock_creator_to_db(user_id):
     c = conn.cursor()
 
     #What we want to add and where we want to add it:
-    c.execute("INSERT INTO stockcreator VALUES (?,)", (user_id,))
+    c.execute("INSERT INTO stockcreator VALUES (?)", (user_id,))
 
     conn.commit()
     conn.close()
@@ -213,7 +215,7 @@ def add_stock_to_stock_table(stock_name, stock_symbol, stock_creator):
     c = conn.cursor()
 
     #What we want to add into the table:
-    c.execute("INSERT INTO stock VALUES (?, ?, 0, ?)", (stock_name, stock_symbol, stock_creator))
+    c.execute("INSERT INTO stock VALUES (?, ?, 1, ?)", (stock_name, stock_symbol, stock_creator))
 
     conn.commit()
     conn.close()
@@ -332,7 +334,7 @@ def set_stock_owner_plus_payout(stock_symbol, new_owner, amount):
     c = conn.cursor()
     
     #Inputing the data we want to get:
-    c.execute("SELECT rowid, * FROM allstocks WHERE stock_symbol = ? AND available = True LIMIT ?", (stock_symbol, amount))
+    c.execute("SELECT rowid, * FROM allstocks WHERE stock_symbol = ? AND available = 'True' LIMIT ?", (stock_symbol, amount))
 
     #Getting the data from the db and storing it in a variable
     stocks_to_change_owner_for = c.fetchall()
@@ -348,8 +350,7 @@ def set_stock_owner_plus_payout(stock_symbol, new_owner, amount):
     c.execute("SELECT * FROM stock WHERE stock_symbol = ?", (stock_symbol,))
 
     stock_data = c.fetchall()
-    stock_price = stock_data[2]
-
+    stock_price = stock_data[0][2]
     #for loop that changes them all individually
     for stock in stocks_to_change_owner_for:
         primary_key = stock[0]
@@ -366,6 +367,17 @@ def set_stock_owner_plus_payout(stock_symbol, new_owner, amount):
         conn.commit()
         #closing the db:
         conn.close()
+        
+        conn = sqlite3.connect('hse.db')
+        c = conn.cursor()
+
+        c.execute("""UPDATE allstocks SET available = 'False'
+                    WHERE rowid = ?""", (primary_key,))
+
+        #Executing our instructions from above:
+        conn.commit()
+        #closing the db:
+        conn.close()
 
 
 def update_stock_price(stock_creator):
@@ -374,7 +386,7 @@ def update_stock_price(stock_creator):
     trade_count = get_trade_count(stock_creator)
 
     #Calculating the stock price and storing it in a variable:
-    stock_price = (((message_count/200)*50)+(trade_count*50))//100
+    stock_price = (((message_count/100)*50)+(trade_count*50))//100
 
     #creates or connects to an existing db
     conn = sqlite3.connect('hse.db')
@@ -423,7 +435,7 @@ def get_amount_of_available_stocks(stock_symbol):
     #creates cursor
     c = conn.cursor()
 
-    c.execute("SELECT * FROM allstocks WHERE stock_symbol = ? AND available = TRUE", (stock_symbol,))
+    c.execute("SELECT * FROM allstocks WHERE stock_symbol = ? AND available = 'True'", (stock_symbol,))
 
     available = c.fetchall()
     
